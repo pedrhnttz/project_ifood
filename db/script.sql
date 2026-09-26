@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     provedor_oauth TEXT DEFAULT 'local',
     oauth_id TEXT,
     telefone TEXT,
+    google_id TEXT,
     criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

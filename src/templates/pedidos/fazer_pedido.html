@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Realizar Pedido - {{ restaurante.nome }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2>Fazer Pedido: <span class="text-danger">{{ restaurante.nome }}</span></h2>
+    <p class="text-muted">Taxa de Entrega: R$ {{ "%.2f"|format(restaurante.taxa_entrega or 0) }}</p>
+
+    <form method="POST">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">1. Selecione os Itens</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Prato/Lanche</th>
+                            <th>Preço</th>
+                            <th style="width: 150px;">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in refeicoes %}
+                        <tr>
+                            <td>
+                                <strong>{{ item.nome }}</strong><br>
+                                <small class="text-muted">{{ item.descricao }}</small>
+                            </td>
+                            <td>R$ {{ "%.2f"|format(item.preco) }}</td>
+                            <td>
+                                <input type="number" min="0" value="0" name="qtd_{{ item.id }}" class="form-control">
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center py-3">Nenhuma refeição disponível neste restaurante.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">2. Endereço de Entrega</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="endereco_entrega" class="form-label">Endereço Completo *</label>
+                    <input type="text" class="form-control" id="endereco_entrega" name="endereco_entrega" required placeholder="Rua, número, bairro, cidade">
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ url_for('restaurantes.listar') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-success btn-lg">
+                <i class="bi bi-check-circle me-1"></i> Confirmar Pedido
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

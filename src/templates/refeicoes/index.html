@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Cardápio - {{ restaurante.nome }}{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('restaurantes.listar') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Voltar para Restaurantes
+    </a>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="fw-bold mb-0">Cardápio: <span class="text-danger">{{ restaurante.nome }}</span></h2>
+        <p class="text-muted mb-0">
+            Categoria: {{ restaurante.categoria }} | Endereço: {{ restaurante.endereco }}
+        </p>
+    </div>
+    <a href="{{ url_for('refeicoes.criar', restaurante_id=restaurante.id) }}" class="btn btn-success fw-bold">
+        <i class="bi bi-plus-circle me-1"></i> Nova Refeição
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Preço</th>
+                        <th class="text-center" style="width: 250px;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in refeicoes %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td class="fw-bold">{{ r.nome }}</td>
+                        <td class="text-muted">{{ r.descricao or '-' }}</td>
+                        <td class="fw-bold text-success">R$ {{ "%.2f"|format(r.preco) }}</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center align-items-center gap-1">
+                                <form action="{{ url_for('pedidos.adicionar_carrinho') }}" method="POST" class="d-inline">
+                                    <input type="hidden" name="refeicao_id" value="{{ r.id }}">
+                                    <input type="hidden" name="restaurante_id" value="{{ restaurante.id }}">
+                                    <button type="submit" class="btn btn-primary btn-sm fw-bold" title="Adicionar ao Carrinho">
+                                        <i class="bi bi-cart-plus me-1"></i> Pedir
+                                    </button>
+                                </form>
+
+                                <a href="{{ url_for('refeicoes.editar', id=r.id) }}" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form action="{{ url_for('refeicoes.deletar', id=r.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Tem certeza que deseja apagar esta refeição?');">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Apagar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            Nenhuma refeição cadastrada para este restaurante.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

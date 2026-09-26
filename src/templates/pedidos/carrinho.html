@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-4">
+  <h2 class="mb-3"><i class="bi bi-cart-check"></i> O seu Carrinho</h2>
+
+  {% if itens %}
+    <div class="row">
+      <div class="col-md-8">
+        <ul class="list-group mb-3 shadow-sm">
+          {% for item in itens %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <h6 class="my-0">{{ item.nome }}</h6>
+                <small class="text-muted">Qtd: {{ item.quantidade }} x R$ {{ "%.2f"|format(item.preco) }}</small>
+              </div>
+              <span class="text-muted">R$ {{ "%.2f"|format(item.preco * item.quantidade) }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Resumo do Pedido</h5>
+            <p class="d-flex justify-content-between"><span>Subtotal:</span> <span>R$ {{ "%.2f"|format(subtotal) }}</span></p>
+            <p class="d-flex justify-content-between"><span>Taxa de Entrega:</span> <span>R$ {{ "%.2f"|format(taxa_entrega) }}</span></p>
+            <hr>
+            <h5 class="d-flex justify-content-between font-weight-bold"><span>Total:</span> <span>R$ {{ "%.2f"|format(total) }}</span></h5>
+
+            <form action="{{ url_for('pedidos.finalizar_pedido') }}" method="POST" class="mt-3">
+              <div class="mb-3">
+                <label for="endereco" class="form-label">Endereço de Entrega:</label>
+                <input type="text" name="endereco" id="endereco" class="form-control" required placeholder="Rua, número, bairro">
+              </div>
+              <button type="submit" class="btn btn-success w-100">Finalizar Pedido</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">O seu carrinho está vazio. Escolha um restaurante e adicione refeições!</div>
+  {% endif %}
+</div>
+{% endblock %}

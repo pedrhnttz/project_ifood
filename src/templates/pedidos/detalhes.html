@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-4">
+  <div class="card shadow">
+    <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+      <h4 class="m-0">Pedido #{{ pedido.id }} - {{ pedido.restaurante_nome }}</h4>
+      <span class="badge bg-warning text-dark">{{ pedido.status }}</span>
+    </div>
+    <div class="card-body">
+      <p><strong>Endereço de Entrega:</strong> {{ pedido.endereco_entrega }}</p>
+      <p><strong>Data:</strong> {{ pedido.criado_em }}</p>
+
+      <h5>Itens Solicitados:</h5>
+      <ul class="list-group mb-3">
+        {% for item in itens %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ item.refeicao_nome }} (x{{ item.quantidade }})
+            <span>R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <h4 class="text-end text-danger">Total: R$ {{ "%.2f"|format(pedido.valor_total) }}</h4>
+      <a href="{{ url_for('pedidos.meus_pedidos') }}" class="btn btn-secondary">Voltar aos meus pedidos</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
